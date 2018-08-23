@@ -1,0 +1,11 @@
+﻿
+/*系统主题切换*/
+#system-themes { }
+#system-themes li a { height: 35px; line-height: 30px; }
+#system-themes li a span { width: 25px; height: 25px; display: block; float: left; margin-right: 5px; }
+
+/*表单样式*/
+.form-group { margin: 0px 0px 20px 20px !important; }
+
+/*提醒框*/
+.alert-remarks p { text-indent: 2rem; }

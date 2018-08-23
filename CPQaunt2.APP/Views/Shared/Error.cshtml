@@ -1,0 +1,42 @@
+﻿@{
+    Layout = "";
+}
+@model System.Web.Mvc.HandleErrorInfo
+<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>系统繁忙</title>
+    <style>
+        body { background-color: #8d1010; color: #fff; }
+        li { list-style: decimal; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <h3>
+        (′⌒`) 哎哟~ 系统开小差咯,请稍后再试！
+    </h3>
+    <div>
+        可能由以下问题导致
+        <ul>
+            <li>
+                当前系统访问人数较多；
+            </li>
+            <li>
+                您的访问地址有误，请核查再访问；
+            </li>
+            <li>
+                您访问的资源已下线，系统不再提供访问；
+            </li>
+            <li>
+                系统正处于更新升级中，导致资源被占用；
+            </li>
+        </ul>
+    </div>
+    <div>访问路径： ~@Model.ControllerName / @Model.ActionName</div>
+    <div>异常类型：@Model.Exception.Message</div>
+    <div>异常详情：@Model.Exception.StackTrace</div>
+</body>
+</html>

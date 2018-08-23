@@ -1,0 +1,34 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title</title>
+    <link href="~/Resources/css/font-awesome.min.css" rel="stylesheet" />
+    @Styles.Render("~/bundles/css")
+    @{
+        var themes = "ec5051.";
+        var cookie = Request.Cookies["MyThemes"];
+        if (cookie != null)
+        {
+            themes = cookie.Value;
+        }
+        <link data-file="bootstrap" href="@string.Format("/Resources/css/{0}bootstrap.min.css",themes)" rel="stylesheet" />
+        <link data-file="wui" href="@string.Format("/Resources/css/{0}wui.min.css",themes)" rel="stylesheet" />
+    }
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/knockout")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/wui")
+</head>
+<body style="padding:0px;">
+    <div class="container-fluid">
+        @RenderBody()
+    </div>
+</body>
+</html>
+@RenderSection("scripts", required: false)
+<script src="~/Resources/scripts/erp.auto.js"></script>

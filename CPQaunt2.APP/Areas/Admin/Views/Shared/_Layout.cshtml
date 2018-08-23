@@ -1,0 +1,165 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Winner UI</title>
+    <link href="~/Resources/css/font-awesome.min.css" rel="stylesheet" />
+    @Styles.Render("~/bundles/css")
+    @{
+        var themes = "ec5051.";
+        var cookie = Request.Cookies["MyThemes"];
+        if (cookie != null)
+        {
+            themes = cookie.Value;
+        }
+        <link data-file="bootstrap" href="@string.Format("/Resources/css/{0}bootstrap.min.css",themes)" rel="stylesheet" />
+        <link data-file="wui" href="@string.Format("/Resources/css/{0}wui.min.css",themes)" rel="stylesheet" />
+    }
+    @Scripts.Render("~/bundles/modernizr")
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/jqueryval")
+    @Scripts.Render("~/bundles/knockout")
+    @Scripts.Render("~/bundles/bootstrap")
+    @Scripts.Render("~/bundles/wui")
+    <script src="http://apps.bdimg.com/libs/jquery.cookie/1.4.1/jquery.cookie.js" type="text/javascript"></script>
+</head>
+<body>
+    <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container-fluid">
+            <div class="navbar-header">
+                <a href="/" class="navbar-brand" style="text-align: left;">
+                    @*<img src="/Resources/img/logo.png" style="height: 35px;margin-top: -10px;float: left;margin-right: 5px;">*@Winner UI
+                </a>
+            </div>
+            <div class="navbar-collapse collapse">
+                <ul class="nav navbar-nav">
+                    <li><a href="javascript:;" class="active"> <i class="glyphicon glyphicon-lock"></i> 管理中心</a> </li>
+                </ul>
+                <ul class="nav navbar-nav navbar-right">
+                    <li role="presentation" class="dropdown">
+                        <a id="drop5" href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="false" aria-expanded="false">
+                            <i class="glyphicon glyphicon-heart-empty"></i> 系统主题
+                        </a>
+                        <ul id="system-themes" class="dropdown-menu" aria-labelledby="drop5">
+                            <li><a id="ec5051" href="#"><span style="background-color:#ec5051;"></span> 浅红主题</a></li>
+                            <li><a id="438eb9" href="#"><span style="background-color:#438eb9;"></span> 深蓝主题</a></li>
+                            <li><a id="37c6fb" href="#"><span style="background-color:#37c6fb;"></span> 浅蓝主题</a></li>
+                            <li><a id="0d8f0f" href="#"><span style="background-color:#0d8f0f;"></span> 果色主题</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#">请选择主题</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="javascript:;"><i class="glyphicon glyphicon-user"></i> @User.Nickname（@User.UserCode）</a></li>
+                    <li><a href="javascript:;" id="RefreshRight"><i class="glyphicon glyphicon-refresh"></i> 刷新权限</a></li>
+                    <li><a href="/home/logout"><i class="glyphicon glyphicon-off"></i> 注销</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="body-left">
+        <div class="system-menu" style="float:left;">
+            <ul id="trreview" data-bind="foreach:data">
+                <li>
+                    <a data-bind="attr:{href:(url==undefined?'#':url)},click:$root.click" href="#"><i data-bind="attr:{class:ico}" class="glyphicon glyphicon-home"></i><span data-bind="text:text"></span> <i class="glyphicon glyphicon-menu-right" data-bind="visible:childs.length>0"></i> </a>
+                    <ol data-bind="foreach:childs">
+                        <li>
+                            <i class="glyphicon glyphicon-play checked-ico"></i>
+                            <a data-bind="attr:{href:(url==undefined?'#':url)}" href="#"><i data-bind="attr:{class:ico}" class="glyphicon glyphicon-cog"></i><span data-bind="text:text"></span> </a>
+                        </li>
+                    </ol>
+                </li>
+            </ul>
+        </div>
+    </div>
+    <div class="body-content">
+        <div class="container-fluid">@RenderBody()</div>
+    </div>
+
+
+    <script>
+        var vm_menu = new vm({
+            eid: "trreview",
+            data: [
+                { text: " 系统首页", url: "/Admin/Home/Index", ico: "glyphicon glyphicon-home", childs: [] },
+                {
+                    text: " 基础配置",
+                    url: "javascript:;",
+                    ico: "glyphicon glyphicon-th",
+                    childs: [{ text: " 报表栏目", url: "/Admin/Channel/Index", ico: "glyphicon glyphicon-list" },
+                             { text: " 敏感字符", url: "/Admin/Filter/Index", ico: "glyphicon glyphicon-refresh" }]
+                },
+                {
+                    text: " 报表管理",
+                    url: "javascript:;",
+                    ico: "glyphicon glyphicon-cog",
+                    childs: [{ text: " 报表列表", url: "/Admin/Report/Index", ico: "glyphicon glyphicon-list" },
+                             { text: " 新增报表", url: "/Admin/Report/Add", ico: "glyphicon glyphicon-list" }]
+                },
+                {
+                    text: " 权限管理",
+                    url: "javascript:;",
+                    ico: "glyphicon glyphicon-lock",
+                    childs: [{ text: " 报表权限", url: "/Admin/UserReport/Index", ico: "glyphicon glyphicon-lock" }]
+                },
+                { text: " 注销", url: "/Home/Logout", ico: "glyphicon glyphicon-off", childs: [] }],
+            click: function (data, el) {
+                var self = el.currentTarget;
+                var index = $(self).parent().index();
+                var ol = $(self).siblings("ol");
+                if (ol.is(":hidden")) {
+                    ol.slideDown(100);
+                    $(self).addClass("action");
+                    $("i:eq(1)", self).removeClass("glyphicon-menu-right").addClass("glyphicon-menu-down");
+                } else {
+                    ol.slideUp(100);
+                    $(self).removeClass("action");
+                    $("i:eq(1)", self).removeClass("glyphicon-menu-down").addClass("glyphicon-menu-right");
+                }
+                return true;
+            },
+            init: function (href) {
+                $("#trreview>li>ol>li>a").each(function (i) {
+                    var a = $(this);
+                    var link_href = a.attr("href").toLowerCase();
+                    var curr_href = (href ? href : window.location.href).toLowerCase();
+                    //var curr_href = window.location.href.toLowerCase();
+                    if (curr_href.indexOf(link_href) > -1) {
+                        a.parent().addClass("action");
+                        vm_menu.click(null, { currentTarget: a.parents("ol").prev() });
+                    } else {
+                        a.parent().removeClass("action");
+                    }
+                });
+            }
+        });
+        vm_menu.init();
+
+        //主题选择
+        $("#system-themes li a").click(function () {
+            var style = $(this).attr("id");
+            if (style == "default") {
+                style = "";
+            } else {
+                style = style + ".";
+            }
+            $("link[data-file='bootstrap']").attr("href", "/Resources/css/" + style + "bootstrap.min.css");
+            $("link[data-file='wui']").attr("href", "/Resources/css/" + style + "wui.min.css");
+            $.cookie("MyThemes", style, { expires: 30, path: '/' });
+        });
+        //刷新权限
+        $("#RefreshRight").click(function () {
+            $.post("/Home/RefreshRight", {}, function (result) {
+                if (!result.Success) {
+                    alert(result.Message);
+                    return;
+                }
+                alert("刷新权限成功，请继续操作！");
+            })
+        });
+    </script>
+    @RenderSection("scripts", required: false)
+    <script src="~/Resources/scripts/erp.auto.js"></script>
+</body>
+</html>
