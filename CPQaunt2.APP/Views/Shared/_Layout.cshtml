@@ -81,28 +81,29 @@
         var vm_menu = new vm({
             eid: "trreview",
             data: [
-                { text: " 系统首页", url: "/Admin/Home/Index", ico: "glyphicon glyphicon-home", childs: [] },
-                {
-                    text: " 基础配置",
-                    url: "javascript:;",
-                    ico: "glyphicon glyphicon-th",
-                    childs: [{ text: " 报表栏目", url: "/Admin/Channel/Index", ico: "glyphicon glyphicon-list" },
-                             { text: " 敏感字符", url: "/Admin/Filter/Index", ico: "glyphicon glyphicon-refresh" }]
-                },
-                {
-                    text: " 报表管理",
-                    url: "javascript:;",
-                    ico: "glyphicon glyphicon-cog",
-                    childs: [{ text: " 报表列表", url: "/Admin/Report/Index", ico: "glyphicon glyphicon-list" },
-                             { text: " 新增报表", url: "/Admin/Report/Add", ico: "glyphicon glyphicon-list" }]
-                },
-                {
-                    text: " 权限管理",
-                    url: "javascript:;",
-                    ico: "glyphicon glyphicon-lock",
-                    childs: [{ text: " 报表权限", url: "/Admin/UserReport/Index", ico: "glyphicon glyphicon-lock" }]
-                },
-                { text: " 注销", url: "/Home/Logout", ico: "glyphicon glyphicon-off", childs: [] }],
+                { text: " 策略广场", url: "/Home/Index", ico: "glyphicon glyphicon-home", childs: [] },
+                //{
+                //    text: " 基础配置",
+                //    url: "javascript:;",
+                //    ico: "glyphicon glyphicon-th",
+                //    childs: [{ text: " 报表栏目", url: "/Admin/Channel/Index", ico: "glyphicon glyphicon-list" },
+                //             { text: " 敏感字符", url: "/Admin/Filter/Index", ico: "glyphicon glyphicon-refresh" }]
+                //},
+                //{
+                //    text: " 报表管理",
+                //    url: "javascript:;",
+                //    ico: "glyphicon glyphicon-cog",
+                //    childs: [{ text: " 报表列表", url: "/Admin/Report/Index", ico: "glyphicon glyphicon-list" },
+                //             { text: " 新增报表", url: "/Admin/Report/Add", ico: "glyphicon glyphicon-list" }]
+                //},
+                //{
+                //    text: " 权限管理",
+                //    url: "javascript:;",
+                //    ico: "glyphicon glyphicon-lock",
+                //    childs: [{ text: " 报表权限", url: "/Admin/UserReport/Index", ico: "glyphicon glyphicon-lock" }]
+                //},
+                //{ text: " 注销", url: "/Home/Logout", ico: "glyphicon glyphicon-off", childs: [] }
+            ],
             click: function (data, el) {
                 var self = el.currentTarget;
                 var index = $(self).parent().index();

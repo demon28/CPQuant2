@@ -1,0 +1,157 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="page-header">
+    <h3>
+        <i class="glyphicon glyphicon-list"></i> 修改策略
+
+    </h3>
+</div>
+
+@*代码编辑器插件*@
+
+<link href="~/codemirror/lib/codemirror.css" rel="stylesheet" />
+<script src="~/codemirror/lib/codemirror.js"></script>
+
+<script src="~/codemirror/mode/javascript/javascript.js"></script>
+
+<script src="~/codemirror/keymap/vim.js"></script>
+
+<link href="~/codemirror/addon/hint/show-hint.css" rel="stylesheet" />
+<script src="~/codemirror/addon/hint/show-hint.js"></script>
+<script src="~/codemirror/addon/hint/javascript-hint.js"></script>
+
+<link href="~/codemirror/theme/3024-day.css" rel="stylesheet" />
+<link href="~/codemirror/theme/eclipse.css" rel="stylesheet" />
+
+@*高亮*@
+<script src="~/CodeMirror/addon/selection/active-line.js"></script>
+@*折叠*@
+
+<link rel="stylesheet" href="~/CodeMirror/addon/fold/foldgutter.css" />
+<script src="~/CodeMirror/addon/fold/foldcode.js"></script>
+<script src="~/CodeMirror/addon/fold/foldgutter.js"></script>
+<script src="~/CodeMirror/addon/fold/brace-fold.js"></script>
+<script src="~/CodeMirror/addon/fold/comment-fold.js"></script>
+
+
+<script src="~/Js/CPQaunt.js"></script>
+
+
+<div class="form-inline">
+    <label for="exampleInputName2">策略名称：</label>    <input type="text" placeholder="我的新策略" id="txt_name" style="width:180px" class="form-control" value="我的新策略"> &nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="button" value="修 改" id="btn_save" class="btn btn-primary" /> &nbsp;&nbsp;
+    <input type="button" value="编 译" id="btn_encode" class="btn btn-success" data-toggle="tooltip" data-placement="top" />&nbsp;&nbsp;
+    <input type="button" value="回 测" id="btn_huice" class="btn btn-info" />
+</div>
+
+<br />
+
+
+<div class="alert alert-warning" id="div_info">
+    <span id="span_builder"></span>
+    <strong></strong>
+</div>
+
+
+<textarea id="code" name="code">
+
+
+</textarea>
+
+
+
+<script>
+
+    var editor;
+    $(document).ready(function () {
+        editor = setCodeMirror();
+        $("#div_info").hide();
+        Load();
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+            e.preventDefault();
+
+            if (confirm("确认保存吗") == true) {
+                $("#btn_save").click();
+            }
+        }
+    });
+
+    function Load() {
+        $.ajax({
+            url: "/Update/Load",
+            type: "POST",
+            data: { lid: GetQueryString("lid") },
+            success: function (result) {
+                $("#txt_name").val(result.name);
+                editor.setValue(result.content)
+
+            }
+        });
+
+    }
+
+
+
+    $("#btn_save").click(function () {
+        $.ajax({
+            url: "/Update/Update",
+            type: "POST",
+            data: {
+                name: $("#txt_name").val(),
+                content: editor.getValue(),
+                remark: "Near",
+                lid: GetQueryString("lid"),
+            },
+            success: function (result) {
+                if (!result.Success) {
+                    alert("修改失败！")
+                } else {
+                    alert("修改成功！")
+
+                }
+            }
+        });
+    });
+
+
+    $("#btn_encode").click(function () {
+        $.ajax({
+            url: "/Add/Build",
+            type: "POST",
+            data: {
+                name: $("#txt_name").val(),
+                content: editor.getValue(),
+                lid: GetQueryString("lid"),  //随机cid
+
+            },
+            success: function (result) {
+                $("#div_info").show();
+                if (!result.Success) {
+
+                    $("#span_builder").html("编译失败\r\n"+JSON.parse(result.Message).message);
+
+                } else {
+                    $("#span_builder").html("编译成功！");
+
+                }
+            }
+        });
+    });
+
+
+    $("#btn_huice").click(function () {
+        window.location.href = "/Test/Index?lid=" + GetQueryString("lid");
+    });
+
+
+</script>
+
+
+
+

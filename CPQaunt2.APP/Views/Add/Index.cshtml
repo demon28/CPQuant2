@@ -1,0 +1,163 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+<div class="page-header">
+    <h3>
+        <i class="glyphicon glyphicon-list"></i> 新建策略
+
+    </h3>
+</div>
+
+@*代码编辑器插件*@
+
+<link href="~/codemirror/lib/codemirror.css" rel="stylesheet" />
+<script src="~/codemirror/lib/codemirror.js"></script>
+
+<script src="~/codemirror/mode/javascript/javascript.js"></script>
+
+<script src="~/codemirror/keymap/vim.js"></script>
+
+<link href="~/codemirror/addon/hint/show-hint.css" rel="stylesheet" />
+<script src="~/codemirror/addon/hint/show-hint.js"></script>
+<script src="~/codemirror/addon/hint/javascript-hint.js"></script>
+
+<link href="~/codemirror/theme/3024-day.css" rel="stylesheet" />
+<link href="~/codemirror/theme/eclipse.css" rel="stylesheet" />
+
+@*高亮*@
+<script src="~/CodeMirror/addon/selection/active-line.js"></script>
+@*折叠*@
+
+<link rel="stylesheet" href="~/CodeMirror/addon/fold/foldgutter.css" />
+<script src="~/CodeMirror/addon/fold/foldcode.js"></script>
+<script src="~/CodeMirror/addon/fold/foldgutter.js"></script>
+<script src="~/CodeMirror/addon/fold/brace-fold.js"></script>
+<script src="~/CodeMirror/addon/fold/comment-fold.js"></script>
+
+
+<script src="~/Js/CPQaunt.js"></script>
+
+
+<div class="form-inline">
+    <label for="exampleInputName2">策略名称：</label>    <input type="text" placeholder="我的新策略" id="txt_name" style="width:180px" class="form-control" value="我的新策略">&nbsp;&nbsp;&nbsp;&nbsp;
+    <input type="button" value="保 存" id="btn_save" class="btn btn-primary" />  &nbsp;&nbsp;
+    <input type="button" value="编 译" id="btn_encode" class="btn btn-success" data-toggle="tooltip" data-placement="top" />
+
+</div>
+
+<br />
+
+
+<div class="alert alert-warning" id="div_info">
+    <span id="span_builder"></span>
+    <strong></strong>
+</div>
+
+
+<textarea id="code" name="code">
+
+//cid 为本期期号
+     function main(cid) {
+            var baselist =JSON.parse(LotteryFacade.GetAllForUser()).numbers;
+      
+            //获取当期之前的10期数据
+            var lastlist=JSON.parse(LotteryFacade.GetAllForUser(cid,10)).numbers;
+            var mylist = [];
+
+           for (var i = 0; i < baselist.length; i++) {
+             
+                 //去掉5个一模一样的号 约：10个
+                if (baselist[i].N1 == baselist[i].N2 && baselist[i].N1 == baselist[i].N3 && baselist[i].N1 == baselist[i].N4 && baselist[i].N1 == baselist[i].N5) {
+                    continue;
+                }
+                //去掉前四个一样的号 约：10个
+				if (baselist[i].N1 == baselist[i].N2 && baselist[i].N1 == baselist[i].N3 && baselist[i].N1 == baselist[i].N4 ) {
+                    continue;
+                }
+               
+             
+                var item = { 'N1': baselist[i].N1, 'N2': baselist[i].N2, 'N3': baselist[i].N3, 'n4': baselist[i].N4, 'N5': baselist[i].N5};
+                mylist.push(item);
+
+            }
+       
+            return JSON.stringify(mylist);
+            
+
+ }
+
+</textarea>
+
+
+
+<script>
+
+    var editor;
+    $(document).ready(function () {
+        editor = setCodeMirror();
+        $("#div_info").hide();
+    });
+
+    document.addEventListener('keydown', function (e) {
+        if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+            e.preventDefault();
+
+            if (confirm("确认保存吗") == true) {
+                $("#btn_save").click();
+            }
+        }
+    });
+
+    $("#btn_save").click(function () {
+        $.ajax({
+            url: "/Add/Insert",
+            type: "POST",
+            data: {
+                name: $("#txt_name").val(),
+                content: editor.getValue(),
+                remark: "Near"
+            },
+            success: function (result) {
+                if (!result.Success) {
+                    alert("添加失败！")
+                } else {
+                    alert("添加成功！")
+
+                }
+            }
+        });
+    });
+
+
+    $("#btn_encode").click(function () {
+        $.ajax({
+            url: "/Add/Build",
+            type: "POST",
+            data: {
+                name: $("#txt_name").val(),
+                content: editor.getValue(),
+                cid:12854,  //随机cid
+            },
+            success: function (result) {
+                $("#div_info").show();
+                if (!result.Success) {
+
+                    $("#span_builder").html("编译失败\r\n"+JSON.parse(result.Message).message);
+
+                } else {
+                    $("#span_builder").html("编译成功！");
+
+                }
+            }
+        });
+    });
+
+
+
+</script>
+
+
+
+
