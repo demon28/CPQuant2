@@ -39,13 +39,17 @@ namespace CPQaunt2.APP.Controllers
         public ActionResult Build()
         {
             string scriptcode = Request.Form["content"];
-            int cid = 12854;
-            int.TryParse(Request.Form["cid"], out cid);
 
-          
+            string expect = "20180824042";
+            if (!string.IsNullOrEmpty(Request.Form["expect"]))
+            {
+                 expect = Request.Form["expect"];
+            }
+       
+
             CPQaunt.Facade.BuilderScriptFacade builder = new CPQaunt.Facade.BuilderScriptFacade();
 
-            MessageScriptModel message = builder.Builder(cid, scriptcode);
+            MessageScriptModel message = builder.Builder(expect, scriptcode);
 
             JavaScriptSerializer jsSerializer = new JavaScriptSerializer();
             jsSerializer.MaxJsonLength = Int32.MaxValue;

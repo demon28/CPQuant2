@@ -63,7 +63,8 @@ namespace CPQaunt2.APP.Controllers
         public ActionResult HuiCe()
         {
 
-            int cid = int.Parse(Request.Form["cid"]); 
+            string expect = Request.Form["expect"];
+
             int lid = int.Parse(Request.Form["lid"]);
 
             Tcp_Clscript tcp = new Tcp_Clscript();
@@ -74,7 +75,7 @@ namespace CPQaunt2.APP.Controllers
             }
             CPQaunt.Facade.BuilderScriptFacade builder = new CPQaunt.Facade.BuilderScriptFacade();
 
-            MessageScriptModel message = builder.Builder(cid, tcp.Content);  //得到下注数字集合
+            MessageScriptModel message = builder.Builder(expect, tcp.Content);  //得到下注数字集合
 
             if (message.type==MessageType.Log)
             {
@@ -83,7 +84,7 @@ namespace CPQaunt2.APP.Controllers
 
             Tcp_Hiscode tcphis = new Tcp_Hiscode();
 
-            if (tcphis.SelectByPK(cid))
+            if (tcphis.SelectByExpect(expect))
             {
                 string[] sl = tcphis.Opencode.Split(',');
                 NumberModel number = new NumberModel();

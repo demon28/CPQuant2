@@ -9,25 +9,92 @@ namespace CpQuant.CkEditor
 {
     class Program
     {
-
+     
+        static int count = 0;
+        static int winnercount = 0;
+        static int betscount = 0;
         static void Main(string[] args)
         {
-            int cid = 13089;
-            int count = 0;
+           
+     
 
 
+
+            //回测
+
+
+            DateTime stardate = DateTime.Today.AddDays(0);
+
+
+            CPQaunt.DataAccess.Tcp_HiscodeCollection collection = new CPQaunt.DataAccess.Tcp_HiscodeCollection();
+            collection.ListByDate(stardate, DateTime.Today.AddDays(1));
+
+
+            for (int i = 0; i < collection.DataTable.Rows.Count; i++)
+            {
+                betscount = betscount + 1;
+
+                if (collection.DataTable.Rows[i]["opencode"].ToString()=="2,4,4,9,1")
+                {
+
+                }
+
+
+                List<NumberModel>  mylist = Enter( collection.DataTable.Rows[i]["expect"].ToString());
+
+                NumberModel number = new NumberModel();
+                string[] sl= collection.DataTable.Rows[i]["opencode"].ToString().Split(',');
+                number.N1 = int.Parse(sl[0]);
+                number.N2 = int.Parse(sl[1]);
+                number.N3 = int.Parse(sl[2]);
+                number.N4 = int.Parse(sl[3]);
+                number.N5 = int.Parse(sl[4]);
+
+                string res= collection.DataTable.Rows[i]["expect"] +"-----"+ collection.DataTable.Rows[i]["opencode"] + "---没中啊？";
+                foreach (var item in mylist)
+                {
+
+                    if (item.N1 == number.N1 && item.N2 == number.N2 && item.N3 == number.N3 && item.N4 == number.N4 && item.N5 == number.N5)
+                    {
+                        winnercount = winnercount + 1;
+                        res=collection.DataTable.Rows[i]["expect"] + "-----" + collection.DataTable.Rows[i]["opencode"] + "---中奖啦！";
+                    }
+                   
+                }
+                Console.WriteLine(res);
+
+
+            }
+
+
+            //count = 100000 - mylist.Count;
+            //Console.WriteLine(count);
+          
+            Console.ReadLine();
+
+        }
+
+
+
+        public static List<NumberModel> Enter(string expect) {
             CPQaunt.Facade.LotteryFacade lottery = new CPQaunt.Facade.LotteryFacade();
-
 
             List<NumberModel> baselist = lottery.GetALL();
 
             //获取当期之前的10期数据
-            List<NumberModel> lastlist = lottery.GetLast(cid, 10);
+            List<NumberModel> lastlist = lottery.GetLast(expect, 10);
+
 
             List<NumberModel> mylist = new List<NumberModel>(); ;
 
             foreach (var item in baselist)
             {
+                if (item.N1==2 && item.N2 == 4 && item.N3==4 && item.N4 == 9 && item.N4 == 1)
+                {
+                   
+                }
+
+
 
                 #region 硬性去除
                 //去掉5个一模一样的号 00000 约：10个
@@ -67,8 +134,8 @@ namespace CpQuant.CkEditor
                 }
 
 
-                //去掉过往10期一样的号 lastnumber 约9个
-                if (CheckHisTop(lastlist,item))
+                //去掉过往10期一样的号 lastnumber 
+                if (CheckHisTop(lastlist, item))
                 {
                     continue;
                 }
@@ -123,12 +190,13 @@ namespace CpQuant.CkEditor
                 mylist.Add(item);
 
             }
-            count = 100000 - mylist.Count;
-            Console.WriteLine(count);
-            Console.WriteLine(mylist.Count);
-            Console.ReadLine();
+            //Console.WriteLine(mylist.Count);
+
+            return mylist;
 
         }
+        
+
 
         /// <summary>
         /// 判断是否与往期数据相同
@@ -140,14 +208,90 @@ namespace CpQuant.CkEditor
 
             foreach (var item in lastnumbers)
             {
+                // 与过往10期 一模一样的
                 if (item.N1==nownumber.N1 && item.N2 == nownumber.N2 && item.N3 == nownumber.N3 && item.N4 == nownumber.N4 && item.N5 == nownumber.N5)
                 {
                     return true;
                 }
+
+                //过往10期其余四个一模一样的
+
+                if (item.N2 == nownumber.N2 && item.N3 == nownumber.N3 && item.N4 == nownumber.N4 && item.N5 == nownumber.N5)
+                {
+                    return true;
+                }
+                if (item.N1 == nownumber.N1 && item.N3 == nownumber.N3 && item.N4 == nownumber.N4 && item.N5 == nownumber.N5)
+                {
+                    return true;
+                }
+                if (item.N1 == nownumber.N1 && item.N2 == nownumber.N2 && item.N4 == nownumber.N4 && item.N5 == nownumber.N5)
+                {
+                    return true;
+                }
+                if (item.N1 == nownumber.N1 && item.N2 == nownumber.N2 && item.N3 == nownumber.N3 && item.N4 == nownumber.N4)
+                {
+                    return true;
+                }
+
+                //过往10期前三，中三，后三 一模一样的  （顺序）
+                ///1=1,2=2,3=3
+                if (item.N1 == nownumber.N1 && item.N2== nownumber.N2 && item.N3 == nownumber.N3 )
+                {
+                    return true;
+                }
+                ///2=2,3=3,4=4
+                if (item.N2 == nownumber.N2 && item.N3 == nownumber.N3 && item.N4 == nownumber.N4)
+                {
+                    return true;
+                }
+                ///3=3,4=4,5=5
+                if (item.N3 == nownumber.N3 && item.N4 == nownumber.N4 && item.N5 == nownumber.N5 )
+                {
+                    return true;
+                }
+
+
+                //号尾 咬 号头  三个一模一样 （顺序）
+                ///1=1,4=4,5=5
+                if (item.N4 == nownumber.N4 && item.N5 == nownumber.N5 && item.N1 == nownumber.N1)
+                {
+                    return true;
+                }
+                ///1=1,2=2,5=5
+                if (item.N5 == nownumber.N5 && item.N1 == nownumber.N1 && item.N2 == nownumber.N2)
+                {
+                    return true;
+                }
+
+
+                //跳位 三个一模一样的  （非顺序）
+                ///1=1,2=2,4=4
+                if (item.N1 == nownumber.N1 && item.N2 == nownumber.N2 && item.N4 == nownumber.N4)
+                {
+                    return true;
+                }
+
+                ///1=1,3=3,4=4
+                if (item.N1 == nownumber.N1 && item.N3 == nownumber.N3 && item.N4 == nownumber.N4)
+                {
+                    return true;
+                }
+
+                ///1=1,3=3,5=5
+                if (item.N1 == nownumber.N1 && item.N3 == nownumber.N3 && item.N5 == nownumber.N5)
+                {
+                    return true;
+                }
+                ///2=2,3=3,5=5
+                if (item.N2 == nownumber.N2 && item.N3 == nownumber.N3 && item.N5 == nownumber.N5)
+                {
+                    return true;
+                }
+
+
             }
             return false;
         }
-
 
         /// <summary>
         /// 奇偶判断

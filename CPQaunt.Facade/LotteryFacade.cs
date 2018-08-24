@@ -34,11 +34,11 @@ namespace CPQaunt.Facade
         /// 获得上期数据 JavaScript 使用
         /// </summary>
         /// <returns></returns>
-        public string GetAllForUser(int cid, int count)
+        public string GetAllForUser(string expect, int count)
         {
             MessageScriptModel message = new MessageScriptModel();
             message.type = MessageType.List;
-            message.numbers = GetLast(cid, count);
+            message.numbers = GetLast(expect, count);
             message.status = true;
 
             return JsonConvert.SerializeObject(message);
@@ -51,12 +51,12 @@ namespace CPQaunt.Facade
         /// <param name="cid"></param>
         /// <param name="count"></param>
         /// <returns></returns>
-        public List<NumberModel> GetLast(int cid,int count)
+        public List<NumberModel> GetLast(string expect,int count)
         {
             List<NumberModel> numbers = new List<NumberModel>();
 
             Tcp_HiscodeCollection hiscodeCollection = new Tcp_HiscodeCollection();
-            if (!hiscodeCollection.ListByLast(cid,count))
+            if (!hiscodeCollection.ListByLast(expect, count))
             {
                 return numbers;
             }

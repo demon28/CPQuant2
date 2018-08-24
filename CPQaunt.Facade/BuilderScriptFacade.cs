@@ -19,7 +19,7 @@ namespace CPQaunt.Facade
         /// <param name="cid">默认需求本期开奖id，回测系统使用</param>
         /// <param name="code">编译代码</param>
         /// <returns></returns>
-        public MessageScriptModel Builder(int cid, string code) {
+        public MessageScriptModel Builder(string expect, string code) {
 
             StringBuilder stringBuilder = new StringBuilder();
 
@@ -41,7 +41,7 @@ namespace CPQaunt.Facade
                     engine.AddHostObject("LotteryFacade", new CPQaunt.Facade.LotteryFacade());
                     engine.Execute(stringBuilder.ToString());
 
-                    var s = engine.Script.main(cid);
+                    var s = engine.Script.main(expect);
 
                     MessageScriptModel message = new MessageScriptModel();
                     message.type = MessageType.List;
