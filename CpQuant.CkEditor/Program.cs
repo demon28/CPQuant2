@@ -13,83 +13,102 @@ namespace CpQuant.CkEditor
         static int count = 0;
         static int winnercount = 0;
         static int betscount = 0;
+        static int failcount = 0;
+        static decimal xiazhuamount = 0;
+        static decimal yingliamount = 0;
+
         static void Main(string[] args)
         {
-           
-     
+
+             Enter("20180824053");
 
 
 
             //回测
+          // Huice();
 
 
-            DateTime stardate = DateTime.Today.AddDays(0);
 
 
-            CPQaunt.DataAccess.Tcp_HiscodeCollection collection = new CPQaunt.DataAccess.Tcp_HiscodeCollection();
-            collection.ListByDate(stardate, DateTime.Today.AddDays(1));
 
-
-            for (int i = 0; i < collection.DataTable.Rows.Count; i++)
-            {
-                betscount = betscount + 1;
-
-                if (collection.DataTable.Rows[i]["opencode"].ToString()=="2,4,4,9,1")
-                {
-
-                }
-
-
-                List<NumberModel>  mylist = Enter( collection.DataTable.Rows[i]["expect"].ToString());
-
-                NumberModel number = new NumberModel();
-                string[] sl= collection.DataTable.Rows[i]["opencode"].ToString().Split(',');
-                number.N1 = int.Parse(sl[0]);
-                number.N2 = int.Parse(sl[1]);
-                number.N3 = int.Parse(sl[2]);
-                number.N4 = int.Parse(sl[3]);
-                number.N5 = int.Parse(sl[4]);
-
-                string res= collection.DataTable.Rows[i]["expect"] +"-----"+ collection.DataTable.Rows[i]["opencode"] + "---没中啊？";
-                foreach (var item in mylist)
-                {
-
-                    if (item.N1 == number.N1 && item.N2 == number.N2 && item.N3 == number.N3 && item.N4 == number.N4 && item.N5 == number.N5)
-                    {
-                        winnercount = winnercount + 1;
-                        res=collection.DataTable.Rows[i]["expect"] + "-----" + collection.DataTable.Rows[i]["opencode"] + "---中奖啦！";
-                    }
-                   
-                }
-                Console.WriteLine(res);
-
-
-            }
-
-
-            //count = 100000 - mylist.Count;
-            //Console.WriteLine(count);
-          
             Console.ReadLine();
 
         }
 
 
+    public static void Huice() {
+
+        DateTime stardate = DateTime.Today.AddDays(-1);
+
+        CPQaunt.DataAccess.Tcp_HiscodeCollection collection = new CPQaunt.DataAccess.Tcp_HiscodeCollection();
+        collection.ListByDate(stardate, DateTime.Today.AddDays(1));
+
+
+        for (int i = 0; i < collection.DataTable.Rows.Count; i++)
+        {
+            betscount = betscount + 1;
+
+            if (collection.DataTable.Rows[i]["opencode"].ToString() == "4,5,3,3,6")
+            {
+
+            }
+
+
+            List<NumberModel> mylist = Enter(collection.DataTable.Rows[i]["expect"].ToString());
+
+            NumberModel number = new NumberModel();
+            string[] sl = collection.DataTable.Rows[i]["opencode"].ToString().Split(',');
+            number.N1 = int.Parse(sl[0]);
+            number.N2 = int.Parse(sl[1]);
+            number.N3 = int.Parse(sl[2]);
+            number.N4 = int.Parse(sl[3]);
+            number.N5 = int.Parse(sl[4]);
+
+                decimal setamount = mylist.Count*0.001m;
+                decimal getamount =0- setamount;
+                
+            string res = collection.DataTable.Rows[i]["expect"] + "-----" + collection.DataTable.Rows[i]["opencode"] + "---没中啊？ 下注："+ setamount + " --盈利："+ getamount;
+            foreach (var item in mylist)
+            {
+
+                    if (item.N1 == number.N1 && item.N2 == number.N2 && item.N3 == number.N3 && item.N4 == number.N4 && item.N5 == number.N5)
+                    {
+                        winnercount = winnercount + 1;
+                        getamount = 95 - setamount;
+                        res = collection.DataTable.Rows[i]["expect"] + "-----" + collection.DataTable.Rows[i]["opencode"] + "---中奖啦！ 下注：" + setamount + " --盈利：" + getamount;
+                    }
+
+
+                }
+
+                failcount = failcount + 1;
+                xiazhuamount = xiazhuamount + setamount;
+                yingliamount = yingliamount + getamount;
+                
+                Console.WriteLine(res +"---没中："+ failcount+"---中了"+winnercount);
+
+            }
+
+            Console.WriteLine("总下注：" + collection.DataTable.Rows.Count + "-----没中：" + failcount + "---中了" + winnercount+"-----总收益："+yingliamount+" -----总下注"+xiazhuamount);
+        }
+
+
 
         public static List<NumberModel> Enter(string expect) {
+
             CPQaunt.Facade.LotteryFacade lottery = new CPQaunt.Facade.LotteryFacade();
 
             List<NumberModel> baselist = lottery.GetALL();
 
             //获取当期之前的10期数据
-            List<NumberModel> lastlist = lottery.GetLast(expect, 10);
+            List<NumberModel> lastlist = lottery.GetLast(expect, 2);
 
 
             List<NumberModel> mylist = new List<NumberModel>(); ;
 
             foreach (var item in baselist)
             {
-                if (item.N1==2 && item.N2 == 4 && item.N3==4 && item.N4 == 9 && item.N4 == 1)
+                if (item.N1==4 && item.N2 == 5 && item.N3==3 && item.N4 == 3 && item.N5 == 6)
                 {
                    
                 }
@@ -136,6 +155,18 @@ namespace CpQuant.CkEditor
 
                 //去掉过往10期一样的号 lastnumber 
                 if (CheckHisTop(lastlist, item))
+                {
+                    continue;
+                }
+
+
+                //TODO：没有上期号码中 其中一个的杀掉
+                if (CheckHisAllNot(lastlist[0],item))
+                {
+                    continue;
+                }
+
+                if (CheckSum(item))
                 {
                     continue;
                 }
@@ -190,12 +221,66 @@ namespace CpQuant.CkEditor
                 mylist.Add(item);
 
             }
-            //Console.WriteLine(mylist.Count);
 
+            count = 100000 - mylist.Count;
+           Console.WriteLine(count);
+           Console.WriteLine(mylist.Count);
             return mylist;
 
         }
-        
+
+        private static bool CheckSum(NumberModel item)
+        {
+            int sum = item.N1 + item.N2 + item.N3 + item.N4 + item.N5;
+
+            if (sum<10)
+            {
+                return true;
+            }
+
+            if (sum > 40)
+            {
+                return true;
+            }
+
+            return false;
+
+        }
+
+        /// <summary>
+        /// 上期开的号码本期中一个没有
+        /// </summary>
+        /// <param name="numberModel"></param>
+        /// <param name="item"></param>
+        /// <returns></returns>
+        private static bool CheckHisAllNot(NumberModel numberModel, NumberModel item)
+        {
+            if (item.N1!=numberModel.N1 && item.N1 != numberModel.N2 && item.N1 != numberModel.N3 && item.N1 != numberModel.N4 && item.N1 != numberModel.N5 )
+            {
+                return false;
+            }
+
+            if (item.N2 != numberModel.N1 && item.N2 != numberModel.N2 && item.N2!= numberModel.N3 && item.N2 != numberModel.N4 && item.N2 != numberModel.N5)
+            {
+                return false;
+            }
+            if (item.N3 != numberModel.N1 && item.N3 != numberModel.N2 && item.N3 != numberModel.N3 && item.N3 != numberModel.N4 && item.N3 != numberModel.N5)
+            {
+                return false;
+            }
+            if (item.N4 != numberModel.N1 && item.N4 != numberModel.N2 && item.N4 != numberModel.N3 && item.N4 != numberModel.N4 && item.N4 != numberModel.N5)
+            {
+                return false;
+            }
+            if (item.N5 != numberModel.N1 && item.N5 != numberModel.N2 && item.N5 != numberModel.N3 && item.N5 != numberModel.N4 && item.N5 != numberModel.N5)
+            {
+                return false;
+            }
+
+            return true;
+
+        }
+
 
 
         /// <summary>
@@ -250,44 +335,45 @@ namespace CpQuant.CkEditor
                     return true;
                 }
 
+               
+               //号尾 咬 号头  三个一模一样 （顺序）
+               ///1=1,4=4,5=5
+               if (item.N4 == nownumber.N4 && item.N5 == nownumber.N5 && item.N1 == nownumber.N1)
+               {
+                   return true;
+               }
+               ///1=1,2=2,5=5
+               if (item.N5 == nownumber.N5 && item.N1 == nownumber.N1 && item.N2 == nownumber.N2)
+               {
+                   return true;
+               }
 
-                //号尾 咬 号头  三个一模一样 （顺序）
-                ///1=1,4=4,5=5
-                if (item.N4 == nownumber.N4 && item.N5 == nownumber.N5 && item.N1 == nownumber.N1)
-                {
-                    return true;
-                }
-                ///1=1,2=2,5=5
-                if (item.N5 == nownumber.N5 && item.N1 == nownumber.N1 && item.N2 == nownumber.N2)
-                {
-                    return true;
-                }
 
 
-                //跳位 三个一模一样的  （非顺序）
-                ///1=1,2=2,4=4
-                if (item.N1 == nownumber.N1 && item.N2 == nownumber.N2 && item.N4 == nownumber.N4)
-                {
-                    return true;
-                }
+               //跳位 三个一模一样的  （非顺序）
+               ///1=1,2=2,4=4
+               if (item.N1 == nownumber.N1 && item.N2 == nownumber.N2 && item.N4 == nownumber.N4)
+               {
+                   return true;
+               }
 
-                ///1=1,3=3,4=4
-                if (item.N1 == nownumber.N1 && item.N3 == nownumber.N3 && item.N4 == nownumber.N4)
-                {
-                    return true;
-                }
+               ///1=1,3=3,4=4
+               if (item.N1 == nownumber.N1 && item.N3 == nownumber.N3 && item.N4 == nownumber.N4)
+               {
+                   return true;
+               }
 
-                ///1=1,3=3,5=5
-                if (item.N1 == nownumber.N1 && item.N3 == nownumber.N3 && item.N5 == nownumber.N5)
-                {
-                    return true;
-                }
-                ///2=2,3=3,5=5
-                if (item.N2 == nownumber.N2 && item.N3 == nownumber.N3 && item.N5 == nownumber.N5)
-                {
-                    return true;
-                }
-
+               ///1=1,3=3,5=5
+               if (item.N1 == nownumber.N1 && item.N3 == nownumber.N3 && item.N5 == nownumber.N5)
+               {
+                   return true;
+               }
+               ///2=2,3=3,5=5
+               if (item.N2 == nownumber.N2 && item.N3 == nownumber.N3 && item.N5 == nownumber.N5)
+               {
+                   return true;
+               }
+              
 
             }
             return false;

@@ -54,7 +54,7 @@ namespace CPQaunt.DataAccess
     {
         public bool ListByLast(string expect, int count)
         {
-            string sql = " SELECT s.* FROM (SELECT t.*,rownum FROM  tcp_hiscode t WHERE t.expect <'"+ expect + "' ORDER BY t.expect desc) s WHERE rownum <"+count+" order by s.datetime desc";
+            string sql = " SELECT s.* FROM (SELECT t.*,rownum FROM  tcp_hiscode t WHERE t.expect <'"+ expect + "' ORDER BY t.expect desc) s WHERE rownum <="+count+" order by s.datetime desc";
 
             return ListBySql(sql);
 
