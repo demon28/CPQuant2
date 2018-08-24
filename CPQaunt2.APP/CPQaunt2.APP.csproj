@@ -774,6 +774,8 @@
     <Content Include="Resources\scripts\calcu.js" />
     <Content Include="Resources\scripts\Calculation.js" />
     <Content Include="Resources\scripts\daterangepicker\bootstrap-combined.min.css" />
+    <Content Include="Resources\scripts\daterangepicker\bootstrap-datetimepicker.css" />
+    <Content Include="Resources\scripts\daterangepicker\bootstrap-datetimepicker.js" />
     <Content Include="Resources\scripts\daterangepicker\bootstrap-datetimepicker.min.css" />
     <Content Include="Resources\scripts\daterangepicker\bootstrap-datetimepicker.min.js" />
     <Content Include="Resources\scripts\daterangepicker\daterangepicker-1.js" />
@@ -781,6 +783,8 @@
     <Content Include="Resources\scripts\daterangepicker\daterangepicker-bs3.css" />
     <Content Include="Resources\scripts\daterangepicker\daterangepicker.css" />
     <Content Include="Resources\scripts\daterangepicker\daterangepicker.js" />
+    <Content Include="Resources\scripts\daterangepicker\locales\bootstrap-datetimepicker.zh-CN.js" />
+    <Content Include="Resources\scripts\daterangepicker\locales\bootstrap-datetimepicker.zh-TW.js" />
     <Content Include="Resources\scripts\daterangepicker\moment-1.min.js" />
     <Content Include="Resources\scripts\daterangepicker\moment.min.js" />
     <Content Include="Resources\scripts\erp.auto.js" />

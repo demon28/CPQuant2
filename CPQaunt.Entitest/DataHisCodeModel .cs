@@ -9,13 +9,14 @@ namespace CPQaunt.Entitest
     /// <summary>
     /// 数据库实体
     /// </summary>
-   public class DataScriptModel
+   public class DataHisCodeModel
     {
-     
+        public int cid { get; set; }
 
-        public int lid { get; set; }
-        public string name { get; set; }
-        public string content { get; set; }
-        public string remark { get; set; }
+        public string expect { get; set; }
+
+        public string opencode { get; set; }
+
+        public string datetime { get; set; }
     }
 }

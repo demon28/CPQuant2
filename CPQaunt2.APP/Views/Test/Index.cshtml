@@ -2,6 +2,242 @@
 @{
     ViewBag.Title = "Index";
 }
+<script src="~/Js/CPQaunt.js"></script>
 
-<h2>Index</h2>
 
+
+<div class="page-header">
+    <h3>
+        <i class="glyphicon glyphicon-list"></i> 回测策略
+
+    </h3>
+</div>
+
+
+<table id="simple-table" class="table  table-bordered table-hover">
+
+    <tr>
+        <td width="100px">
+            <span id="span_lid"></span>
+        </td>
+        <td><a onclick="ToUpdate()"><span id="span_name"></span></a></td>
+
+        <td width="300px">
+            开始时间：<input size="25" type="text" value="" class="form_datetime" id="input_d1" />  
+            <br />
+            <br />
+           结束时间：<input size="25" type="text" value="" class="form_datetime" id="input_d2" />
+
+        </td>
+
+        <td width="200px"><button class="btn btn-danger" id="btn_star">开 始</button></td>
+
+    </tr>
+
+</table>
+
+
+
+
+<div id="div_info">
+    回测期数：<span id="sp_huicecount"></span> &nbsp;&nbsp;
+    中奖次数：<span id="sp_lotCount"></span> &nbsp;&nbsp;
+    下注次数：<span id="sp_setCount"></span> &nbsp;&nbsp;
+    花费金额：<span id="sp_spendamont"></span> &nbsp;&nbsp;
+    中奖金额：<span id="sp_suceamont"></span> &nbsp;&nbsp;
+
+</div>
+<br />
+<span id="span_log"></span>
+<textarea id="scriptcode" style="height:100px;width:100%;display:none"></textarea><br /><br />
+<textarea id="listnumber" type="text" style="height:100px;width:100%;display:none"></textarea>
+<br />
+<table id="dynamic-table" class="table table-striped table-bordered table-hover">
+    <thead>
+        <tr>
+            <th class="center"> ID</th>
+            <th>期数</th>
+            <th>开奖号码</th>
+            <th>开奖时间</th>
+            <th>中奖结果</th>
+            <th>号码数量</th>
+            <th>下注金额</th>
+            <th>中奖金额</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr></tr>
+    </tbody>
+</table>
+<link href="~/Resources/scripts/daterangepicker/bootstrap-datetimepicker.css" rel="stylesheet" />
+<script src="~/Resources/scripts/daterangepicker/bootstrap-datetimepicker.js"></script>
+
+
+<script>
+
+    var mydate = new Date();
+    $(document).ready(function () {
+
+        Load();
+        $("#dynamic-table").hide();
+        $("#div_info").hide();
+        $("#input_d1").val(mydate.toLocaleDateString());
+        $("#input_d2").val(mydate.toLocaleDateString());
+    });
+
+    function ToUpdate() {
+
+        window.location.href = "/Update/Index?lid=" + GetQueryString("lid");
+
+    }
+    function Load() {
+
+        $.ajax({
+
+            url: "/Test/Load",
+            type: "POST",
+            data: { lid: GetQueryString("lid") },
+            success: function (result) {
+                $("#span_lid").html(result.lid);
+                $("#span_name").html(result.name);
+                $("#scriptcode").val(result.content);
+            }
+        });
+
+    }
+    var startime ;
+    var endtime ;
+
+    $("#btn_star").click(function () {
+        $("#dynamic-table").show();
+        $("#div_info").show();
+
+        startime = $("#input_d1").val();
+        endtime = $("#input_d2").val();
+
+
+        BeginTo();
+
+
+    });
+
+    var hisjson;
+    function BeginTo() {
+        $.ajax({
+
+            url: "/Test/GetHis",
+            type: "POST",
+            data: { stardate: startime, enddate: endtime },
+            success: function (result) {
+
+              
+
+                $("#span_log").html();
+                if (!result.Success) {
+                    $("#span_log").html(result.Message);
+                    return false;
+                }
+                hisjson = result.Content.Data;
+                $("#sp_huicecount").html(hisjson.length);
+
+                //已获取需求回测的历史数据
+                //循环执行往期回测结果
+                var lotCount = 0;    //中奖次数
+                var setCount = 0;   //下注次数
+                var spendamont = 0;  //总花费金额
+                var suceamont = 0;   //总收益金额
+
+
+
+                for (var i = 0; i < hisjson.length; i++) {
+
+                    setCount = setCount + 1;
+                    ((function (i) {
+
+
+                        $.ajax({
+
+                            url: "/Test/HuiCe",
+                            type: "POST",
+                            data: {
+                                cid: hisjson[i].cid,
+
+                                lid: GetQueryString("lid"),
+                            },
+                            success: function (result) {
+
+
+
+                                if (!result.Success) {
+                                    $("#span_log").html(result.Message);
+                                    return false;
+                                }
+
+
+                                var setamount = parseFloat((result.Content * 0.001).toFixed(4));
+                                var getamount = parseFloat((95 - setamount).toFixed(4));;
+
+
+                                var isres = "<spna class='label label-default'>未中奖</span>";
+                                if (result.Content != "0") {
+                                    isres = "<spna class='label label-success'>中奖啦</span>";
+                                    lotCount = lotCount + 1;
+                                    suceamont = parseFloat((suceamont + getamount).toFixed(4));
+                                }
+                                spendamont = parseFloat((spendamont + setamount).toFixed(4));
+
+
+                                AddTableRows(hisjson[i], isres, setamount, getamount, result.Content);  //动态添加行
+
+
+                                $("#sp_lotCount").html(lotCount);
+                                $("#sp_setCount").html(setCount);
+                                $("#sp_spendamont").html(spendamont);
+                                $("#sp_suceamont").html(suceamont);
+                            }
+                        });
+
+
+                    }(i)));
+
+                }
+
+            }
+        });
+
+    }
+
+
+    function AddTableRows(his, isres, setamount, getamount, numbercount) {
+
+        var row = "<tr>";
+        row += " <td > " + his.cid + "</td> ";
+        row += "<td > " + his.expect + "</td > ";
+        row += " <td>" + his.opencode + "</td> ";
+        row += " <td> " + his.datetime + "</td > ";
+        row += " <td>" + isres + "</td > ";
+        row += " <td>" + numbercount+ "</td > ";
+        row += " <td> <span style='color:green'>" + setamount + "</span></td >";
+        row += "<td  <span style='color:red'>" + getamount + "</span></td >";
+        row +="</tr >";
+
+        $("#dynamic-table").append(row);
+
+    }
+
+
+
+    $(".form_datetime").datetimepicker({
+        language: 'zh',  //日期
+        format: 'yyyy-mm-dd',//显示格式
+        todayHighlight: 1,//今天高亮
+        minView: "month",
+        startView:2,
+        forceParse: 0,
+        showMeridian: 1,
+        autoclose: 1
+        });
+        
+
+
+</script>

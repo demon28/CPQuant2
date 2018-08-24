@@ -134,7 +134,7 @@
                 $("#div_info").show();
                 if (!result.Success) {
 
-                    $("#span_builder").html("编译失败\r\n"+JSON.parse(result.Message).message);
+                    $("#span_builder").html("编译失败：<br/>"+JSON.parse(result.Message).message);
 
                 } else {
                     $("#span_builder").html("编译成功！");
