@@ -20,12 +20,12 @@ namespace CpQuant.CkEditor
         static void Main(string[] args)
         {
 
-             Enter("20180824053");
+            // Enter("20180824053");
 
 
 
             //回测
-          // Huice();
+           Huice();
 
 
 
@@ -101,7 +101,7 @@ namespace CpQuant.CkEditor
             List<NumberModel> baselist = lottery.GetALL();
 
             //获取当期之前的10期数据
-            List<NumberModel> lastlist = lottery.GetLast(expect, 2);
+            List<NumberModel> lastlist = lottery.GetLast(expect, 10);
 
 
             List<NumberModel> mylist = new List<NumberModel>(); ;
@@ -112,8 +112,6 @@ namespace CpQuant.CkEditor
                 {
                    
                 }
-
-
 
                 #region 硬性去除
                 //去掉5个一模一样的号 00000 约：10个
@@ -160,7 +158,7 @@ namespace CpQuant.CkEditor
                 }
 
 
-                //TODO：没有上期号码中 其中一个的杀掉
+                //没有上期号码中 其中一个的杀掉
                 if (CheckHisAllNot(lastlist[0],item))
                 {
                     continue;
@@ -217,28 +215,36 @@ namespace CpQuant.CkEditor
                 #endregion
 
 
-
                 mylist.Add(item);
 
             }
 
             count = 100000 - mylist.Count;
-           Console.WriteLine(count);
-           Console.WriteLine(mylist.Count);
+            //Console.WriteLine(count);
+            //Console.WriteLine(mylist.Count);
+
+
+
             return mylist;
 
         }
 
+
+        /// <summary>
+        /// 判断和值
+        /// </summary>
+        /// <param name="item"></param>
+        /// <returns></returns>
         private static bool CheckSum(NumberModel item)
         {
             int sum = item.N1 + item.N2 + item.N3 + item.N4 + item.N5;
 
-            if (sum<10)
+            if (sum<8)
             {
                 return true;
             }
 
-            if (sum > 40)
+            if (sum > 39)
             {
                 return true;
             }
@@ -280,7 +286,6 @@ namespace CpQuant.CkEditor
             return true;
 
         }
-
 
 
         /// <summary>
