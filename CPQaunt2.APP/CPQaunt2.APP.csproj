@@ -826,6 +826,7 @@
     <Content Include="Views\Test\Index.cshtml" />
     <Content Include="Views\Update\Index.cshtml" />
     <Content Include="Views\Create\Index.cshtml" />
+    <None Include="Views\Home\ApiDoc.cshtml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

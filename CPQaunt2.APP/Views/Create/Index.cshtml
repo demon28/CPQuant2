@@ -5,7 +5,84 @@
 
 <div class="page-header">
     <h3>
-        <i class="glyphicon glyphicon-list"></i> 回测策略
+        <i class="glyphicon glyphicon-list"></i> 生成集合
 
     </h3>
 </div>
+
+<div class="form-inline">
+
+    当前期号： <input type="text" class="form-control" id="input_qihao"> <button type="button" class="btn btn-primary" id="btn_create">生 成</button>
+</div>
+
+<br /><br />
+
+      <span id="span_cid" style="display:none"></span>
+<span id="span_info"></span>
+<div>
+    <textarea class="form-control" style="height:500px" id="machine_code">
+
+
+
+   </textarea>
+
+</div>
+
+<script src="~/Js/CPQaunt.js"></script>
+<script>
+    $(document).ready(function () {
+        Load();
+    });
+    function Load() {
+
+        $.ajax({
+            url: "/Create/GetQiHao",
+            type: "POST",
+            contentType: "application/json; charset=utf-8",
+         
+            success: function (result) {
+           
+                if (!result.Success) {
+                    alert(result.Message);
+                    return false;
+                }
+
+                var json = JSON.parse(result.Content);
+
+                $("#span_cid").html(json.CID);
+                $("#input_qihao").val(json.EXPECT);
+            }
+        });
+
+
+    }
+
+    $("#btn_create").click(function () {
+
+        $.ajax({
+            url: "/Create/Create",
+            type: "POST",
+       
+            data: {
+                lid: GetQueryString("lid"),
+                cid: $("#span_cid").html(),
+            },
+            success: function (result) {
+            
+                if (!result.Success) {
+                    alert(result.Message);
+                    return false;
+                }
+
+                $("#machine_code").val(result.Content)
+            }
+        });
+
+
+
+
+    });
+
+
+
+</script>

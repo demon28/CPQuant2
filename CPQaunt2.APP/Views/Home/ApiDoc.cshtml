@@ -1,0 +1,27 @@
+﻿
+@{
+    ViewBag.Title = "ApiDoc";
+}
+
+<div class="page-header">
+    <h3>
+        <i class="glyphicon glyphicon-list"></i> API文档
+
+    </h3>
+</div>
+
+<div>
+    //获取所有数据{'12345','12346'}
+    <br />    <br />
+    var baselist =JSON.parse(LotteryFacade.GetAllForUser()).numbers;
+    <br />
+    <br />
+    <br />
+    <br />
+    //获取当期之前的10期数据{'12345','12346'}
+    <br />    <br />
+    var lastlist=JSON.parse(LotteryFacade.GetAllForUser(cid,10)).numbers;
+
+
+</div>
+

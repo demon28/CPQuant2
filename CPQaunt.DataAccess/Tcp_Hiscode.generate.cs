@@ -25,7 +25,14 @@ namespace CPQaunt.DataAccess
     /// </summary>
     public partial class Tcp_Hiscode : DataAccessBase
     {
-       
+        public bool GetLastSingle() {
+
+            string sql= @"select * from (
+select t.*,rownum from tcp_hiscode t  order by t.datetime desc) s where rownum = 1";
+
+           return SelectBySql(sql);
+        }
+
         //提示：此类由代码生成器生成，如无特殊情况请不要更改。如要扩展请在外部同名类中扩展
     }
     
@@ -51,6 +58,7 @@ namespace CPQaunt.DataAccess
 
 
         }
+
 
 
         //提示：此类由代码生成器生成，如无特殊情况请不要更改。如要扩展请在外部同名类中扩展

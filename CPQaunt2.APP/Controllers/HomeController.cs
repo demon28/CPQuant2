@@ -17,6 +17,12 @@ namespace CPQaunt2.APP.Controllers
         {
             return View();
         }
+
+        
+         public ActionResult ApiDoc()
+        {
+            return View();
+        }
         #region 注释
 
         /*
