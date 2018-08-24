@@ -28,10 +28,21 @@ namespace CPQaunt.DataAccess
         public bool GetLastSingle() {
 
             string sql= @"select * from (
-select t.*,rownum from tcp_hiscode t  order by t.datetime desc) s where rownum = 1";
+            select t.*,rownum from tcp_hiscode t  order by t.datetime desc) s where rownum = 1";
 
            return SelectBySql(sql);
         }
+
+
+        public bool SelectByExpect(string expect)
+        {
+
+            string sql = "select t.* from tcp_hiscode t where t.expect='" + expect + "'";
+            return SelectBySql(sql);
+
+        
+        }
+
 
         //提示：此类由代码生成器生成，如无特殊情况请不要更改。如要扩展请在外部同名类中扩展
     }

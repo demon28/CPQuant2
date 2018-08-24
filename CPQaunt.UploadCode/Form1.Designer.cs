@@ -28,20 +28,49 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
+            this.btn_star = new System.Windows.Forms.Button();
+            this.textBox1 = new System.Windows.Forms.TextBox();
+            this.timer1 = new System.Windows.Forms.Timer(this.components);
             this.SuspendLayout();
+            // 
+            // btn_star
+            // 
+            this.btn_star.Location = new System.Drawing.Point(23, 27);
+            this.btn_star.Name = "btn_star";
+            this.btn_star.Size = new System.Drawing.Size(241, 42);
+            this.btn_star.TabIndex = 0;
+            this.btn_star.Text = "开始采集";
+            this.btn_star.UseVisualStyleBackColor = true;
+            this.btn_star.Click += new System.EventHandler(this.btn_star_Click);
+            // 
+            // textBox1
+            // 
+            this.textBox1.Location = new System.Drawing.Point(23, 95);
+            this.textBox1.Multiline = true;
+            this.textBox1.Name = "textBox1";
+            this.textBox1.Size = new System.Drawing.Size(241, 163);
+            this.textBox1.TabIndex = 1;
             // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(316, 141);
+            this.ClientSize = new System.Drawing.Size(293, 293);
+            this.Controls.Add(this.textBox1);
+            this.Controls.Add(this.btn_star);
             this.Name = "Form1";
-            this.Text = "UploadCode";
+            this.Text = "采集器";
             this.ResumeLayout(false);
+            this.PerformLayout();
 
         }
 
         #endregion
+
+        private System.Windows.Forms.Button btn_star;
+        private System.Windows.Forms.TextBox textBox1;
+        private System.Windows.Forms.Timer timer1;
     }
 }
 
