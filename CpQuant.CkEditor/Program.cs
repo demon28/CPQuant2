@@ -16,11 +16,11 @@ namespace CpQuant.CkEditor
         static int failcount = 0;
         static decimal xiazhuamount = 0;
         static decimal yingliamount = 0;
-
+        static int listcount =0;
         static void Main(string[] args)
         {
 
-            // Enter("20180824053");
+          //   Enter("20180824053");
 
 
 
@@ -29,7 +29,8 @@ namespace CpQuant.CkEditor
 
 
 
-
+            Console.WriteLine(count);
+            Console.WriteLine(listcount);
 
             Console.ReadLine();
 
@@ -38,7 +39,7 @@ namespace CpQuant.CkEditor
 
     public static void Huice() {
 
-        DateTime stardate = DateTime.Today.AddDays(-1);
+        DateTime stardate = DateTime.Today.AddDays(-3);
 
         CPQaunt.DataAccess.Tcp_HiscodeCollection collection = new CPQaunt.DataAccess.Tcp_HiscodeCollection();
         collection.ListByDate(stardate, DateTime.Today.AddDays(1));
@@ -164,11 +165,17 @@ namespace CpQuant.CkEditor
                     continue;
                 }
 
+                //五位和值
                 if (CheckSum(item))
                 {
                     continue;
                 }
 
+                //前三位和值
+                if (CheckSumThree(item))
+                {
+                    continue;
+                }
 
 
                 #endregion
@@ -220,12 +227,33 @@ namespace CpQuant.CkEditor
             }
 
             count = 100000 - mylist.Count;
-            //Console.WriteLine(count);
-            //Console.WriteLine(mylist.Count);
+            listcount = mylist.Count;
 
 
 
             return mylist;
+
+        }
+
+        private static bool CheckSumThree(NumberModel item)
+        {
+            int sum1 = item.N1 + item.N2 + item.N3;
+            int sum2 = item.N2 + item.N3 + item.N4;
+            int sum3 = item.N3 + item.N4 + item.N5;
+
+            if (sum1<3)
+            {
+                return true;
+            }
+            if (sum2 < 3)
+            {
+                return true;
+            }
+            if (sum3 < 3)
+            {
+                return true;
+            }
+            return false;
 
         }
 
