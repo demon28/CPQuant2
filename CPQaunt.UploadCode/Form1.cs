@@ -51,7 +51,7 @@ namespace CPQaunt.UploadCode
             int days = ts.Days;
 
             DateTime endday = DateTime.Today;
-            DateTime sarday = DateTime.Today.AddDays(days);
+            DateTime sarday = DateTime.Today.AddDays(0-days);
 
 
             while (sarday <= endday)
