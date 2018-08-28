@@ -20,7 +20,7 @@ namespace CpQuant.CkEditor
         static void Main(string[] args)
         {
 
-          //   Enter("20180824053");
+        //    Enter("20180824053");
 
 
 
@@ -150,6 +150,69 @@ namespace CpQuant.CkEditor
                 {
                     continue;
                 }
+
+
+                //*杀豹子
+
+                //123
+
+                if (item.N1==item.N2 && item.N1==item.N3)
+                {
+                    continue;
+                }
+
+                //124
+                if (item.N1 == item.N2 && item.N1 == item.N4)
+                {
+                    continue;
+                }
+                //125
+                if (item.N1 == item.N2 && item.N1 == item.N5)
+                {
+                    continue;
+                }
+                //134
+                if (item.N1 == item.N3 && item.N1 == item.N4)
+                {
+                    continue;
+                }
+                //135
+                if (item.N1 == item.N3 && item.N1 == item.N5)
+                {
+                    continue;
+                }
+                //145
+                if (item.N4 == item.N5 && item.N5 == item.N1)
+                {
+                    continue;
+                }
+                //234
+                if (item.N2 == item.N3 && item.N2 == item.N4)
+                {
+                    continue;
+                }
+
+                //245
+
+                if (item.N2 == item.N4 && item.N2 == item.N5)
+                {
+                    continue;
+                }
+                //235
+                if (item.N2 == item.N3 && item.N2 == item.N5)
+                {
+                    continue;
+                }
+                //345
+                if (item.N3 == item.N4 && item.N3 == item.N5)
+                {
+                    continue;
+                }
+                
+               
+
+                
+                
 
 
                 //去掉过往10期一样的号 lastnumber 

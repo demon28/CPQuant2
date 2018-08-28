@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CPQaunt.UploadCode", "CPQau
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CpQuant.CkEditor", "CpQuant.CkEditor\CpQuant.CkEditor.csproj", "{9642264A-BCB8-45A0-B7AA-767FD90688A4}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CPQaunt.TuoGuanZhe", "CPQaunt.TuoGuanZhe\CPQaunt.TuoGuanZhe.csproj", "{56705EF5-3EBB-4E94-A2DD-1518F3EE5C59}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -58,6 +60,12 @@ Global
 		{9642264A-BCB8-45A0-B7AA-767FD90688A4}.My Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9642264A-BCB8-45A0-B7AA-767FD90688A4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9642264A-BCB8-45A0-B7AA-767FD90688A4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{56705EF5-3EBB-4E94-A2DD-1518F3EE5C59}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56705EF5-3EBB-4E94-A2DD-1518F3EE5C59}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56705EF5-3EBB-4E94-A2DD-1518F3EE5C59}.My Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{56705EF5-3EBB-4E94-A2DD-1518F3EE5C59}.My Debug|Any CPU.Build.0 = Debug|Any CPU
+		{56705EF5-3EBB-4E94-A2DD-1518F3EE5C59}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{56705EF5-3EBB-4E94-A2DD-1518F3EE5C59}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
