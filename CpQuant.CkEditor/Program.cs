@@ -20,17 +20,18 @@ namespace CpQuant.CkEditor
         static void Main(string[] args)
         {
 
-        //    Enter("20180824053");
+            //    Enter("20180824053");
 
 
+            // Programun.Huice();
 
             //回测
-           Huice();
+            //  Huice();
 
+            KillTwo.Kill();
 
-
-            Console.WriteLine(count);
-            Console.WriteLine(listcount);
+            //Console.WriteLine(count);
+            //Console.WriteLine(listcount);
 
             Console.ReadLine();
 
